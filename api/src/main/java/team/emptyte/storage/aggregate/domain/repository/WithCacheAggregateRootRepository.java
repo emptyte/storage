@@ -1,4 +1,26 @@
-
+/*
+ * This file is part of storage, licensed under the MIT License
+ *
+ * Copyright (c) 2023 FenixTeam
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
 package team.emptyte.storage.aggregate.domain.repository;
 
 import java.util.Collection;
@@ -8,7 +30,6 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 import java.util.function.Consumer;
 import java.util.function.IntFunction;
-
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -585,6 +606,43 @@ public final class WithCacheAggregateRootRepository<AggregateType extends Aggreg
   }
 
   /**
+   * This method uses the {@link AggregateRootRepository#findAllSync(Consumer, IntFunction)} of the {@link #storageRepository} to find the
+   * {@link AggregateType}s in the repository, and if they exist, it saves them to the {@link #cacheRepository}.
+   *
+   * @param postLoadAction The action to execute for each model after it's loaded.
+   * @param factory        The factory to create the {@link Collection} to return.
+   * @param <C>            The type of the {@link Collection} to return.
+   * @return A {@link Collection} containing all the {@link AggregateType}s in the repository.
+   * @see AggregateRootRepository#findAllSync(Consumer, IntFunction)
+   * @since 1.0.0
+   */
+  public <C extends Collection<@NotNull AggregateType>> @Nullable C loadAllSync(final @NotNull Consumer<@NotNull AggregateType> postLoadAction, final @NotNull IntFunction<@NotNull C> factory) {
+    final var aggregateTypes = this.storageRepository.findAllSync(postLoadAction, factory);
+    if (aggregateTypes == null) {
+      return null;
+    }
+    for (final var aggregateType : aggregateTypes) {
+      this.cacheRepository.saveSync(aggregateType);
+    }
+    return aggregateTypes;
+  }
+
+  /**
+   * This method executes and wraps the {@link #loadAllSync(Consumer, IntFunction)} method in a {@link CompletableFuture} with
+   * the {@link Executor} specified in the constructor.
+   *
+   * @param postLoadAction The action to execute for each model after it's loaded.
+   * @param factory        The factory to create the {@link Collection} to return.
+   * @param <C>            The type of the {@link Collection} to return.
+   * @return A {@link CompletableFuture} that will complete with a {@link Collection} containing all the {@link AggregateType}s in the repository.
+   * @see #loadAllSync(Consumer, IntFunction)
+   * @since 1.0.0
+   */
+  public <C extends Collection<@NotNull AggregateType>> @NotNull CompletableFuture<@Nullable C> loadAllAsync(final @NotNull Consumer<@NotNull AggregateType> postLoadAction, final @NotNull IntFunction<@NotNull C> factory) {
+    return CompletableFuture.supplyAsync(() -> this.loadAllSync(postLoadAction, factory), this.executor());
+  }
+
+  /**
    * This method returns the {@link #storageRepository}.
    *
    * @return The {@link #storageRepository}.
@@ -683,5 +741,68 @@ public final class WithCacheAggregateRootRepository<AggregateType extends Aggreg
    */
   public @NotNull CompletableFuture<@NotNull AggregateType> saveInCacheAsync(final @NotNull AggregateType aggregateType) {
     return CompletableFuture.supplyAsync(() -> this.saveInCacheSync(aggregateType), this.executor());
+  }
+
+  /**
+   * This method uses the {@link AggregateRootRepository#deleteAndRetrieveSync(String)} of the {@link #cacheRepository} to delete the
+   * {@link AggregateType} with the specified id, and if it exists, it saves it to the {@link #storageRepository}.
+   *
+   * @param id The id of the {@link AggregateType}.
+   * @return The {@link AggregateType} with the specified id, or {@code null} if it doesn't exist.
+   * @see AggregateRootRepository#deleteAndRetrieveSync(String)
+   * @see AggregateRootRepository#saveSync(AggregateRoot)
+   * @since 1.0.0
+   */
+  public @Nullable AggregateType uploadSync(final @NotNull String id) {
+    final var modelType = this.cacheRepository.deleteAndRetrieveSync(id);
+    if (modelType == null) {
+      return null;
+    }
+    this.storageRepository.saveSync(modelType);
+    return modelType;
+  }
+
+  /**
+   * This method executes and wraps the {@link #uploadSync(String)} method in a {@link CompletableFuture} with
+   * the {@link Executor} specified in the constructor.
+   *
+   * @param id The id of the {@link AggregateType}.
+   * @return A {@link CompletableFuture} that will complete with the {@link AggregateType} with the specified id, or {@code null} if it doesn't exist.
+   * @see #uploadSync(String)
+   * @since 1.0.0
+   */
+  public @NotNull CompletableFuture<@Nullable AggregateType> uploadAsync(final @NotNull String id) {
+    return CompletableFuture.supplyAsync(() -> this.uploadSync(id), this.executor());
+  }
+
+  /**
+   * This method uses iterates over the {@link #cacheRepository} and saves them to the {@link #storageRepository}.
+   * After that, it deletes all the {@link AggregateType}s from the {@link #cacheRepository}.
+   *
+   * @param preUploadAction The action to execute for each model before it's uploaded.
+   * @see AggregateRootRepository#iterator()
+   * @see AggregateRootRepository#saveSync(AggregateRoot)
+   * @see AggregateRootRepository#deleteAllSync()
+   * @since 1.0.0
+   */
+  public void uploadAllSync(final @NotNull Consumer<@NotNull AggregateType> preUploadAction) {
+    for (final var aggregateType : this.cacheRepository) {
+      preUploadAction.accept(aggregateType);
+      this.storageRepository.saveSync(aggregateType);
+    }
+    this.cacheRepository.deleteAllSync();
+  }
+
+  /**
+   * This method executes and wraps the {@link #uploadAllSync(Consumer)} method in a {@link CompletableFuture} with
+   * the {@link Executor} specified in the constructor.
+   *
+   * @param preUploadAction The action to execute for each model before it's uploaded.
+   * @return A {@link CompletableFuture} that will complete when all the {@link AggregateType}s are uploaded.
+   * @see #uploadAllSync(Consumer)
+   * @since 1.0.0
+   */
+  public @NotNull CompletableFuture<Void> uploadAllAsync(final @NotNull Consumer<@NotNull AggregateType> preUploadAction) {
+    return CompletableFuture.runAsync(() -> this.uploadAllSync(preUploadAction), this.executor());
   }
 }
