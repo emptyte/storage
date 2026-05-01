@@ -1,0 +1,18 @@
+[versions]
+indra = "4.0.0"
+
+[libraries]
+jetbrains-annotations = { module = "org.jetbrains:annotations", version = "26.1.0" }
+
+# Build plugins
+build-indra = { module = "net.kyori:indra-common", version.ref = "indra" }
+build-indra-crossdoc = { module = "net.kyori:indra-crossdoc", version.ref = "indra" }
+build-indra-spotless = { module = "net.kyori:indra-licenser-spotless", version.ref = "indra" }
+build-indra-publishing = { module = "net.kyori:indra-publishing-gradle-plugin", version.ref = "indra" }
+
+[bundles]
+indra = ["build-indra", "build-indra-crossdoc", "build-indra-spotless", "build-indra-publishing"]
+
+[plugins]
+storage-java-library = { id = "storage.java.library" }
+storage-java-publishing = { id = "storage.java.publishing" }
