@@ -9,7 +9,7 @@ public abstract class Identity<ID> {
     this.id = id;
   }
 
-  public ID id() {
+  public @NotNull ID id() {
     return this.id;
   }
 }
