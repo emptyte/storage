@@ -17,6 +17,7 @@ sequenceOf(
 }
 
 sequenceOf(
+  "caffeine",
   "json"
 ).forEach {
   include(":${rootProject.name}-$it")
