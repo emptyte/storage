@@ -5,6 +5,7 @@ indra = "4.0.0"
 [libraries]
 jetbrains-annotations = { module = "org.jetbrains:annotations", version = "26.1.0" }
 
+caffeine = { module = "com.github.ben-manes.caffeine:caffeine", version = "3.2.4" }
 jackson-core = { module = "tools.jackson.core:jackson-core", version = "3.2.0" }
 
 # Indra plugins
