@@ -5,6 +5,7 @@ import org.jetbrains.annotations.Nullable;
 import team.emptyte.storage.Identity;
 import team.emptyte.storage.exception.RepositoryException;
 import team.emptyte.storage.exception.SerializationException;
+import team.emptyte.storage.json.jackson.wrapper.PrettyPrintWriteContext;
 import team.emptyte.storage.json.serialization.TypeSerializer;
 import team.emptyte.storage.repository.AsyncRepository;
 import tools.jackson.core.*;
@@ -25,20 +26,24 @@ public class JsonRepository<T extends Identity<String>> extends AsyncRepository<
 
   private final static Logger LOGGER = Logger.getLogger(JsonRepository.class.getName());
 
-  private final static JsonFactory JSON_FACTORY = new JsonFactory();
-
   private final Path folderPath;
+  private final JsonFactory jsonFactory;
   private final TypeSerializer<T> typeSerializer;
+  private final ObjectWriteContext objectWriteContext;
 
-  public JsonRepository(
+  JsonRepository(
     final @NotNull Executor executor,
+    final @NotNull JsonFactory jsonFactory,
     final @NotNull Path folderPath,
-    final @NotNull TypeSerializer<T> typeSerializer
+    final @NotNull TypeSerializer<T> typeSerializer,
+    final boolean prettyPrint
   ) {
     super(executor);
 
     this.folderPath = folderPath;
+    this.jsonFactory = jsonFactory;
     this.typeSerializer = typeSerializer;
+    this.objectWriteContext = new PrettyPrintWriteContext(prettyPrint);
   }
 
   private @NotNull String fileName(final @NotNull String id) {
@@ -50,7 +55,7 @@ public class JsonRepository<T extends Identity<String>> extends AsyncRepository<
   }
 
   private @NotNull T internalFind(final @NotNull Path filePath) {
-    try (final JsonParser jsonParser = JSON_FACTORY.createParser(ObjectReadContext.empty(), filePath)) {
+    try (final JsonParser jsonParser = this.jsonFactory.createParser(ObjectReadContext.empty(), filePath)) {
       return this.typeSerializer.deserialize(jsonParser);
     } catch (final Exception e) {
       throw new SerializationException("Failed to deserialize model", e);
@@ -125,8 +130,10 @@ public class JsonRepository<T extends Identity<String>> extends AsyncRepository<
   @Override
   public @NotNull T saveSync(@NotNull final T entity) {
     final Path filePath = this.filePath(entity.id());
-    try (final JsonGenerator jsonGenerator = JSON_FACTORY.createGenerator(ObjectWriteContext.empty(), filePath, JsonEncoding.UTF8)) {
+    try (final JsonGenerator jsonGenerator = this.jsonFactory.createGenerator(this.objectWriteContext, filePath, JsonEncoding.UTF8)) {
       this.typeSerializer.serialize(entity, jsonGenerator);
+    } catch (final Exception e) {
+      throw new SerializationException("Failed to serialize entity with id: " + entity.id(), e);
     }
     return entity;
   }
