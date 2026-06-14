@@ -1,11 +1,11 @@
-package team.emptyte.storage.jackson.repository;
+package team.emptyte.storage.json.repository;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import team.emptyte.storage.Identity;
 import team.emptyte.storage.exception.RepositoryException;
 import team.emptyte.storage.exception.SerializationException;
-import team.emptyte.storage.jackson.serialization.TypeSerializer;
+import team.emptyte.storage.json.serialization.TypeSerializer;
 import team.emptyte.storage.repository.AsyncRepository;
 import tools.jackson.core.*;
 import tools.jackson.core.json.JsonFactory;

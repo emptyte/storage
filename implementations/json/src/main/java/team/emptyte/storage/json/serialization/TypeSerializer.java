@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package team.emptyte.storage.jackson.serialization;
+package team.emptyte.storage.json.serialization;
 
 import org.jetbrains.annotations.NotNull;
 import team.emptyte.storage.exception.SerializationException;
