@@ -5,7 +5,7 @@ indra = "4.0.0"
 [libraries]
 jetbrains-annotations = { module = "org.jetbrains:annotations", version = "26.1.0" }
 
-jackson-core = { module = "tools.jackson.core:jackson-core", version = "3.1.1" }
+jackson-core = { module = "tools.jackson.core:jackson-core", version = "3.2.0" }
 
 # Indra plugins
 build-indra = { module = "net.kyori:indra-common", version.ref = "indra" }
