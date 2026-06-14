@@ -15,3 +15,10 @@ sequenceOf(
   include(":${rootProject.name}-$it")
   project(":${rootProject.name}-$it").projectDir = file(it)
 }
+
+sequenceOf(
+  "json"
+).forEach {
+  include(":${rootProject.name}-$it")
+  project(":${rootProject.name}-$it").projectDir = file("implementations/$it")
+}
