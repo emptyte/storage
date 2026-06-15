@@ -14,7 +14,7 @@ import java.util.*
 
 class JavaLibraryConventionPlugin : Plugin<Project> {
   companion object {
-    private const val DEFAULT_JAVADOC_PUBLISH_ROOT = "https://github.com/emptyte/storage"
+    private const val DEFAULT_JAVADOC_PUBLISH_ROOT = "https://emptyte.github.io/storage/"
   }
 
   override fun apply(target: Project) {
