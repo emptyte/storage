@@ -13,6 +13,10 @@ import org.gradle.kotlin.dsl.*
 import java.util.*
 
 class JavaLibraryConventionPlugin : Plugin<Project> {
+  companion object {
+    private const val DEFAULT_JAVADOC_PUBLISH_ROOT = "https://github.com/emptyte/storage"
+  }
+
   override fun apply(target: Project) {
     with(target) {
       apply(plugin = "storage.java.publishing")
@@ -45,7 +49,7 @@ class JavaLibraryConventionPlugin : Plugin<Project> {
       }
 
       extensions.configure<CrossdocExtension> {
-        baseUrl().set(providers.gradleProperty("javadocPublishRoot").orElse("https://github.com/emptyte/storage"))
+        baseUrl().set(providers.gradleProperty("javadocPublishRoot").orElse(DEFAULT_JAVADOC_PUBLISH_ROOT))
         nameBasedDocumentationUrlProvider {
           projectNamePrefix.set("storage-")
         }
