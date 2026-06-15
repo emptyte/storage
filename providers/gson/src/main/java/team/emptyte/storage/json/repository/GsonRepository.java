@@ -23,6 +23,12 @@
  */
 package team.emptyte.storage.json.repository;
 
+import com.google.gson.JsonObject;
+import com.google.gson.internal.bind.TypeAdapters;
+import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonWriter;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import team.emptyte.storage.Identity;
 import team.emptyte.storage.exception.repository.RepositoryException;
 import team.emptyte.storage.repository.AsyncRepository;
@@ -37,14 +43,6 @@ import java.util.Collection;
 import java.util.concurrent.Executor;
 import java.util.function.IntFunction;
 import java.util.logging.Logger;
-
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
-import com.google.gson.JsonObject;
-import com.google.gson.internal.bind.TypeAdapters;
-import com.google.gson.stream.JsonReader;
-import com.google.gson.stream.JsonWriter;
 
 public class GsonRepository<T extends Identity<String>> extends AsyncRepository<T, String> {
   private final static Logger LOGGER = Logger.getLogger(GsonRepository.class.getName());

@@ -23,22 +23,21 @@
  */
 package team.emptyte.storage.test;
 
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 import team.emptyte.storage.json.repository.GsonRepository;
 import team.emptyte.storage.repository.Repository;
 import team.emptyte.storage.test.user.User;
 import team.emptyte.storage.test.user.codec.UserTypeSerializer;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.concurrent.Executor;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.io.TempDir;
+import static org.junit.jupiter.api.Assertions.*;
 
 class GsonRepositoryTest {
   @TempDir

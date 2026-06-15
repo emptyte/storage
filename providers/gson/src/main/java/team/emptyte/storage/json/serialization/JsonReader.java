@@ -23,6 +23,10 @@
  */
 package team.emptyte.storage.json.serialization;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import team.emptyte.storage.serialization.Reader;
 import team.emptyte.storage.serialization.TypeSerializer;
 
@@ -31,12 +35,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 import java.util.function.Function;
-
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 
 public class JsonReader implements Reader<JsonObject> {
   public static final Function<JsonObject, JsonReader> FACTORY = JsonReader::new;

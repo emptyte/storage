@@ -23,6 +23,9 @@
  */
 package team.emptyte.storage.json.repository;
 
+import com.google.gson.JsonObject;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 import team.emptyte.storage.Identity;
 import team.emptyte.storage.repository.AsyncRepository;
 import team.emptyte.storage.repository.builder.RepositoryBuilder;
@@ -31,11 +34,6 @@ import team.emptyte.storage.serialization.TypeSerializer;
 import java.nio.file.Path;
 import java.util.Objects;
 import java.util.concurrent.Executor;
-
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
-
-import com.google.gson.JsonObject;
 
 public class GsonRepositoryBuilder<T extends Identity<String>> extends RepositoryBuilder<T, String> {
   private final Path folderPath;
