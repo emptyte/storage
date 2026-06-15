@@ -3,11 +3,16 @@ import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.apply
 import org.gradle.kotlin.dsl.configure
+import org.gradle.plugins.signing.SigningExtension
 
 class JavaPublishingConventionPlugin : Plugin<Project> {
   override fun apply(target: Project) {
     with(target) {
       apply(plugin = "net.kyori.indra.publishing")
+
+      extensions.configure<SigningExtension> {
+        isRequired = false
+      }
 
       extensions.configure<IndraExtension> {
         github("emptyte", "storage") {
