@@ -10,7 +10,9 @@ pluginManagement {
 rootProject.name = "storage"
 
 sequenceOf(
-  "core"
+  "bom",
+  "api",
+  "serialization"
 ).forEach {
   include(":${rootProject.name}-$it")
   project(":${rootProject.name}-$it").projectDir = file(it)
@@ -18,7 +20,7 @@ sequenceOf(
 
 sequenceOf(
   "caffeine",
-  "json"
+  "gson"
 ).forEach {
   include(":${rootProject.name}-$it")
   project(":${rootProject.name}-$it").projectDir = file("implementations/$it")
