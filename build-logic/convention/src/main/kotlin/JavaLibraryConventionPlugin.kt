@@ -45,7 +45,7 @@ class JavaLibraryConventionPlugin : Plugin<Project> {
       }
 
       extensions.configure<CrossdocExtension> {
-        baseUrl().set(providers.gradleProperty("javadocPublishRoot"))
+        baseUrl().set(providers.gradleProperty("javadocPublishRoot").orElse("https://github.com/emptyte/storage"))
         nameBasedDocumentationUrlProvider {
           projectNamePrefix.set("storage-")
         }
