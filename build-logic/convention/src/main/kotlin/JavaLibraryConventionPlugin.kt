@@ -48,8 +48,6 @@ class JavaLibraryConventionPlugin : Plugin<Project> {
         }
       }
 
-
-
       extensions.configure<CrossdocExtension> {
         baseUrl().set(providers.gradleProperty("javadocPublishRoot").orElse(DEFAULT_JAVADOC_PUBLISH_ROOT))
         nameBasedDocumentationUrlProvider {
