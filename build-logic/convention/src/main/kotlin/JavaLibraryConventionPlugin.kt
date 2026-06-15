@@ -16,6 +16,7 @@ class JavaLibraryConventionPlugin : Plugin<Project> {
         javaVersions {
           target(21)
           minimumToolchain(21)
+          strictVersions(true)
         }
       }
 
