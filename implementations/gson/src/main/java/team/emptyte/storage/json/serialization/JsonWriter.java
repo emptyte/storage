@@ -23,6 +23,12 @@
  */
 package team.emptyte.storage.json.serialization;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import team.emptyte.storage.serialization.TypeSerializer;
 import team.emptyte.storage.serialization.Writer;
 
@@ -30,14 +36,6 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.UUID;
 import java.util.function.Function;
-
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 
 public class JsonWriter implements Writer<JsonObject> {
   private final static JsonObject EMPTY_JSON_OBJECT = new JsonObject();
@@ -166,7 +164,9 @@ public class JsonWriter implements Writer<JsonObject> {
     if (child == null) {
       return this;
     }
-    this.jsonObject.add(field, typeSerializer.serialize(child, new JsonWriter()));
+    final JsonWriter jsonWriter = new JsonWriter();
+    typeSerializer.serialize(child, jsonWriter);
+    this.jsonObject.add(field, jsonWriter.current());
     return this;
   }
 
@@ -202,7 +202,9 @@ public class JsonWriter implements Writer<JsonObject> {
     }
     final var array = new JsonArray(children.size());
     for (final var child : children) {
-      array.add(typeSerializer.serialize(child, new JsonWriter()));
+      final JsonWriter jsonWriter = new JsonWriter();
+      typeSerializer.serialize(child, jsonWriter);
+      array.add(jsonWriter.current());
     }
     this.jsonObject.add(field, array);
     return this;
