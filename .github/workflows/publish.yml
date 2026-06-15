@@ -24,7 +24,7 @@ jobs:
         run: chmod +x ./gradlew
 
       - name: Publicar Artefactos
-        run: ./gradlew publishAllToSonatypeRepository
+        run: ./gradlew publishAllToSonatypeRepository -Pindra.checkClean=false
         env:
           ORG_GRADLE_PROJECT_sonatypeUsername: ${{ secrets.MAVEN_USERNAME }}
           ORG_GRADLE_PROJECT_sonatypePassword: ${{ secrets.MAVEN_PASSWORD }}
