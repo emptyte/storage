@@ -23,15 +23,16 @@
  */
 package team.emptyte.storage.serialization;
 
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import java.util.Collection;
 import java.util.Date;
 import java.util.Map;
 import java.util.UUID;
 
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
+@SuppressWarnings("unused")
 public interface Writer<WriteType> {
   @Contract("_, _ -> this")
   @NotNull Writer<WriteType> writeThis(final @NotNull String key, final @Nullable WriteType value);

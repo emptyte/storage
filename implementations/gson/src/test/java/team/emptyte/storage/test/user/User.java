@@ -25,17 +25,15 @@ package team.emptyte.storage.test.user;
 
 import team.emptyte.storage.Identity;
 
-import org.jetbrains.annotations.NotNull;
-
 public class User extends Identity<String> {
   private final String name;
 
-  public User(final @NotNull String id, final @NotNull String name) {
+  public User(final String id, final String name) {
     super(id);
     this.name = name;
   }
 
-  public @NotNull String name() {
+  public String name() {
     return this.name;
   }
 }
