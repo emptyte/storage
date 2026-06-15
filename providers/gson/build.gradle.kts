@@ -4,10 +4,10 @@ plugins {
 
 dependencies {
   // Project dependencies
-  implementation(project(":${rootProject.name}-core"))
+  api(project(":${rootProject.name}-core"))
 
   // Extra dependencies
-  implementation(libs.gson)
+  api(libs.gson)
 
   // Test dependencies
   testImplementation(platform("org.junit:junit-bom:6.0.3"))

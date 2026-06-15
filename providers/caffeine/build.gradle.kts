@@ -4,8 +4,8 @@ plugins {
 
 dependencies {
   // Project dependencies
-  implementation(project(":${rootProject.name}-core"))
+  api(project(":${rootProject.name}-core"))
 
   // Extra dependencies
-  implementation(libs.caffeine)
+  api(libs.caffeine)
 }
