@@ -18,7 +18,7 @@ class JavaPublishingConventionPlugin : Plugin<Project> {
         }
         mitLicense()
 
-        publishAllTo("sonatype", "https://central.sonatype.com/api/v1/publisher/deployments")
+        publishAllTo("sonatype", "https://central.sonatype.com/repository/maven-releases/")
 
         configurePublications {
           pom {
