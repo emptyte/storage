@@ -20,6 +20,9 @@ jobs:
       - name: Configurar Gradle
         uses: gradle/actions/setup-gradle@v4
 
+      - name: Conceder permisos al Gradle Wrapper
+        run: chmod +x ./gradlew
+
       - name: Publicar Artefactos
         run: ./gradlew publishAllToSonatypeRepository
         env:
