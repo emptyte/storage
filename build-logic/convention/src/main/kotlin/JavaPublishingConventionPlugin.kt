@@ -5,6 +5,7 @@ import org.gradle.api.publish.PublishingExtension
 import org.gradle.kotlin.dsl.apply
 import org.gradle.kotlin.dsl.configure
 import org.gradle.kotlin.dsl.getByType
+import org.gradle.kotlin.dsl.repositories
 import org.gradle.plugins.signing.SigningExtension
 
 class JavaPublishingConventionPlugin : Plugin<Project> {
@@ -17,21 +18,35 @@ class JavaPublishingConventionPlugin : Plugin<Project> {
           ci(true)
         }
         mitLicense()
+      }
 
-        publishAllTo("sonatype", "https://central.sonatype.com/repository/maven-releases/")
+      afterEvaluate {
+        extensions.configure<IndraExtension> {
+          repositories {
+            maven {
+              name = "sonatype"
+              url = uri("https://central.sonatype.com/repository/maven-releases/")
 
-        configurePublications {
-          pom {
-            name.set("storage")
-            description.set("The groundbreaking library that breathes life into your data and models with consistent elegance. Effortlessly manage storage while implementing the powerful repository design pattern.")
-            url.set("https://github.com/emptyte/storage")
+              credentials {
+                username = System.getenv("MAVEN_USERNAME")
+                password = System.getenv("MAVEN_PASSWORD")
+              }
+            }
+          }
 
-            developers {
-              developer {
-                id.set("srvenient")
-                name.set("Nelson Rodriguez Roa")
-                url.set("https://github.com/srvenient")
-                email.set("srvenient@gmail.com")
+          configurePublications {
+            pom {
+              name.set("storage")
+              description.set("The groundbreaking library that breathes life into your data and models with consistent elegance. Effortlessly manage storage while implementing the powerful repository design pattern.")
+              url.set("https://github.com/emptyte/storage")
+
+              developers {
+                developer {
+                  id.set("srvenient")
+                  name.set("Nelson Rodriguez Roa")
+                  url.set("https://github.com/srvenient")
+                  email.set("srvenient@gmail.com")
+                }
               }
             }
           }
