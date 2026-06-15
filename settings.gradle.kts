@@ -11,8 +11,7 @@ rootProject.name = "storage"
 
 sequenceOf(
   "bom",
-  "api",
-  "serialization"
+  "core",
 ).forEach {
   include(":${rootProject.name}-$it")
   project(":${rootProject.name}-$it").projectDir = file(it)
@@ -22,6 +21,6 @@ sequenceOf(
   "caffeine",
   "gson"
 ).forEach {
-  include(":${rootProject.name}-$it")
-  project(":${rootProject.name}-$it").projectDir = file("implementations/$it")
+  include(":${rootProject.name}-$it-provider")
+  project(":${rootProject.name}-$it-provider").projectDir = file("providers/$it")
 }

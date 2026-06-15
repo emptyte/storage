@@ -12,10 +12,9 @@ indra {
 dependencies {
   constraints {
     sequenceOf(
-      "api",
-      "serialization",
-      "caffeine",
-      "gson"
+      "core",
+      "caffeine-provider",
+      "gson-provider"
     ).forEach {
       api(project(":${rootProject.name}-$it"))
     }
